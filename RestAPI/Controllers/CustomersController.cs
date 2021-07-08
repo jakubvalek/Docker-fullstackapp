@@ -25,7 +25,7 @@ namespace RestAPI.Controllers
         }
         */
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersAsync()
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
             return await _context.Customers.ToListAsync();
         }
@@ -55,7 +55,17 @@ namespace RestAPI.Controllers
             _context.Entry(customer).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Customer>> DeleteCustomer(int id)
+        {
+            var customer = await _context.Customers.Where(c => c.ID == id).FirstOrDefaultAsync();
+            _context.Entry(customer).State = EntityState.Deleted;
+            _context.SaveChanges();
+            
+            return Ok();
         }
 
     }

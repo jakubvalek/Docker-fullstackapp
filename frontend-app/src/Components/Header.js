@@ -1,17 +1,23 @@
 import React from "react";
-import {Link} from "react-router";
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Home } from "./Home";
+import { Customer } from "./Customer";
 
 export const Header = (props) => {
     return (
-        <nav className="navbar navbar-default">
-            <div className="container">
-                <ul className="navbar-header">
-                    <ul className="nav navbar-nav">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Customers</a></li>
-                    </ul>
+        <Router>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <ul className="navbar-nav mr-auto">
+                    <li><Link to={'/'} className="nav-link">Home</Link></li>
+                    <li><Link to={'/customer'} className="nav-link">Customers</Link></li>
                 </ul>
-            </div>
-        </nav>
+            </nav>
+            <hr />
+            <Switch>
+                <Route exact path='/' component={Home} />
+                <Route path='/customer' component={Customer} />
+            </Switch>
+        </Router>
     );
+
 };

@@ -13,6 +13,11 @@
   }
 }
 
+.nav-link{
+  font-size: 20px;
+  -webkit-text-stroke: 0.25px black;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
