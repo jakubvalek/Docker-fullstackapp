@@ -63,7 +63,7 @@ namespace RestAPI.Controllers
         {
             var customer = await _context.Customers.Where(c => c.ID == id).FirstOrDefaultAsync();
             _context.Entry(customer).State = EntityState.Deleted;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             
             return Ok();
         }
