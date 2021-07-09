@@ -10,6 +10,8 @@
 
 ## Docker-hub
 1. Stáhněte nebo zkopírujte obsah [docker-compose-nocode.yml](https://github.com/jakubvalek/docker-fullstackapp/blob/main/docker-compose-nocode.yml) (zachovejte jméno a koncovku souboru) do svého systému.
+    1. Pokud máte **Linux/Ubuntu**, tak si stáhněte tento docker-compose: [docker-compose-nocode-linux.yml](https://github.com/jakubvalek/docker-fullstackapp/blob/main/docker-compose-nocode-linux.yml)
+    1. Příkaz na spuštění aplikace v Linuxu bude tedy v tomto případě *sudo docker-compose -f docker-compose-nocode-linux.yml up*
 2. Navigujte do složky obsahující stažený docker-compose-nocode.yml soubor v CMD/příkazové řádce pomocí *cd název_složky* ([návod](https://www.howtogeek.com/659411/how-to-change-directories-in-command-prompt-on-windows-10/))
 3. V příkazové řádce zadejte příkaz: *docker-compose -f docker-compose-nocode.yml up*
 4. Až se aplikace stáhne a nainstaluje, tak si jí můžete prohlédnout pomocí internetového prohlížeče na adrese: http://localhost:8000/ , api a její výsledky pak na adrese http://localhost:8080/customers .
