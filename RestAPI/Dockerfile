@@ -1,21 +1,25 @@
 # syntax=docker/dockerfile:1
+# Obraz nutný k sestavení aplikace
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+# Složka, ve které container nebo obraz bude pracovat
 WORKDIR /app
 
-#ENV PATH $PATH:/root/.dotnet/tools
-#RUN dotnet tool install -g dotnet-ef --version 3.1.1
-
-# Copy csproj and restore as distinct layers
+# Zkopírování csproj 
 COPY *.csproj ./
+# Spuštění obnovení závislostí
 RUN dotnet restore
 
-# Copy everything else and build
+# Zkopírování všech částí aplikace ve složce
 COPY . ./
+# Sestavení .net core aplikace do složky out
 RUN dotnet publish -c Release -o out
 
-# Build runtime image
+## Sestavení obrazu aplikace
+# Obraz, na kterém aplikace poběží
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
-WORKDIR /app
+# Informování dockeru o tom, že pracuje na portu 80 (Hypertext Transfer Protocol (HTTP))
 EXPOSE 80
+# Multipart build, kopírování předchozích částí (sestavení) do WORKDIR (/app)
 COPY --from=build-env /app/out .
+# Instrukce, jak spustit aplikaci - Container se spustí jako spustitelný soubor pomocí ENTRYPOINT, RestAPI.dll je pak sestavený soubor, díky kterého může aplikace běžet
 ENTRYPOINT ["dotnet", "RestAPI.dll"]

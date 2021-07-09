@@ -1,50 +1,50 @@
-version: '3'
+version: '3' # verze pro psaní docker-compose.yml souboru
 
-volumes:
+volumes: # perzistence dat ve složce datafiles: (v případě vypnutí aplikace/databáze)
     datafiles:
 
-services:
-    mssql:
-        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
-        volumes:
+services: # zde se specifikují jednotlivé části aplikace
+    mssql: # název části aplikace pro MSSQL Server
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu #Obraz ke stažení (poběží na tom MSSQL)
+        volumes: # využití definované perzistence, vše se bude ukládat do datafiles:/var/lib/mssql
             - datafiles:/var/lib/mssql
-        restart: always
-        environment: 
+        restart: always # znovu-spuštění části aplikace (MSSQL) v případě pádu
+        environment: # tato část aplikace využije níže definované proměnné pro spuštění aplikace
             ACCEPT_EULA: "Y"
             SA_PASSWORD: "Secret7+"
-        ports:
+        ports: # definování portů a jejich mapování (používaný_port:exposed_port)
             - "4444:1433"
-        networks:
+        networks: # síť, na které poběží aplikace (více DOLE)
             - customers-app
-    customers-api:
-        build:
+    customers-api: # Rest api (backend)
+        build: # jak bude probíhat sestavení (POZNÁMKA: V PŘÍPADĚ SESTAVENÝCH APLIKACÍ NA DOCKER-HUBU ZDE BUILD NEBUDE, ALE POUZE OBRAZ NAPŘ: jvalos/customer-api, REFERENCUJÍCÍ APLIKACI NA DOCKER-HUBU)
             context: RestAPI
             dockerfile: .
-        depends_on: 
+        depends_on: # backend závisí na databázi (určuje, v jakém pořadí se vše spouští, tudíž mssql první, pak backend...)
             - mssql
-        restart: unless-stopped
-        environment: 
-            DBHost: "host.docker.internal"
-            DBPort: "4444"
-            DBUser: "SA"
-            DBPassword: "Secret7+"
-            Database: "Customers"
+        restart: unless-stopped # restartovat pokud nezastaveno uživatelem (šlo by i always nebo on-failure) -- pokud databáze není připravena, tak se aplikace pokusí znova připojit
+        environment: # proměnné použité v aplikaci (connectionString)
+            DBHost: "host.docker.internal" # jak se jmenuje server s databází (měl by být mssql)
+            DBPort: "4444" # na jakém portu
+            DBUser: "SA" # jméno
+            DBPassword: "Secret7+" # heslo
+            Database: "Customers" # vytvořená databáze, na kterou se bude naše aplikace dotazovat
         ports:
             - "8080:80"
         networks:
             - customers-app
-    react-frontend:
+    react-frontend: # React app (frontend)
         build:
             context: frontend-app
             dockerfile: .
-        stdin_open: true
-        tty: true
+        stdin_open: true # definování pro interaktivní procesy (docker run -i)
+        tty: true # definování pro interaktivní procesy (docker run -t) .. dohromady s stdin -it
         depends_on: 
             - customers-api
         ports: 
             - "8000:80"
         networks:
             - customers-app
-networks:
+networks: # definování sítě customers-app a jak se tato sít vytvoří (driver: bridge)
     customers-app:
         driver: bridge
