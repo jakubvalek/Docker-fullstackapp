@@ -24,7 +24,7 @@
 
 # Technické informace
 * Tato aplikace vystavuje porty *8080* (RestAPI), *8000* (frontend-app), *4444* (MSSQL Server)
-* Aplikace byla spouštěna na *Windows 10* s *Docker verzí 20.10.7* a *Docker-compose verzí 1.29.2* na *WSL-2* subsystému.
+* Aplikace byla spouštěna na *Windows 10* s *Docker verzí 20.10.7* a *Docker-compose verzí 1.29.2* na *WSL-2* subsystému a na *Ubuntu 18.04* běžícím v Oracle VM Virtualboxu.
 * [JAK PŘIPRAVIT APLIKACE TAK, ABY ŠLY SPUSTIT NA LOKÁLNÍM DOCKER](https://github.com/jakubvalek/docker-fullstackapp/blob/main/DEPLOYMENT.md)
 
 # Další informace
