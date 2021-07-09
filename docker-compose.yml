@@ -4,28 +4,35 @@ volumes:
     datafiles:
 
 services:
-    ms-sql-server:
-        image: mcr.microsoft.com/mssql/server:2019-latest
+    mssql:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
         volumes:
             - datafiles:/var/lib/mssql
         restart: always
         environment: 
             ACCEPT_EULA: "Y"
             SA_PASSWORD: "Secret7+"
-            MSSQL_PID: "Express"
         ports:
             - "4444:1433"
+        networks:
+            - customers-app
     customers-api:
         build:
             context: RestAPI
             dockerfile: .
         depends_on: 
-            - ms-sql-server
+            - mssql
         restart: unless-stopped
         environment: 
-            - DBHost=host.docker.internal
+            DBHost: "host.docker.internal"
+            DBPort: "4444"
+            DBUser: "SA"
+            DBPassword: "Secret7+"
+            Database: "Customers"
         ports:
             - "8080:80"
+        networks:
+            - customers-app
     react-frontend:
         build:
             context: frontend-app
@@ -36,3 +43,8 @@ services:
             - customers-api
         ports: 
             - "8000:80"
+        networks:
+            - customers-app
+networks:
+    customers-app:
+        driver: bridge

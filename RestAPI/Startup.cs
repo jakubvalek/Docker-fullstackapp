@@ -30,14 +30,15 @@ namespace RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var server = Configuration["DBHost"] ?? "localhost";
+            var server = Configuration["DBHost"] ?? "mssql";
             var port = Configuration["DBPort"] ?? "4444";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "Secret7+";
             var database = Configuration["Database"] ?? "Customers";
             //var connectionString = Configuration.GetConnectionString("myDB");
+            var connectionString = ($"Server={server},{port};Initial Catalog={database};User ID={user};Password={password}");
 
-            services.AddDbContext<CustomerContext>(opt => opt.UseSqlServer($"Server={server},{port};Initial Catalog={database};User ID={user};Password={password}"));
+            services.AddDbContext<CustomerContext>(opt => opt.UseSqlServer(connectionString));
 
             services.AddCors(c => {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
