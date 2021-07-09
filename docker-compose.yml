@@ -18,8 +18,8 @@ services: # zde se specifikují jednotlivé části aplikace
             - customers-app
     customers-api: # Rest api (backend)
         build: # jak bude probíhat sestavení (POZNÁMKA: V PŘÍPADĚ SESTAVENÝCH APLIKACÍ NA DOCKER-HUBU ZDE BUILD NEBUDE, ALE POUZE OBRAZ NAPŘ: jvalos/customer-api, REFERENCUJÍCÍ APLIKACI NA DOCKER-HUBU)
-            context: RestAPI
-            dockerfile: .
+            context: RestAPI # v jaké složce se bude buildit
+            dockerfile: . # kde můžeme najít dockerfile v contextové složce
         depends_on: # backend závisí na databázi (určuje, v jakém pořadí se vše spouští, tudíž mssql první, pak backend...)
             - mssql
         restart: unless-stopped # restartovat pokud nezastaveno uživatelem (šlo by i always nebo on-failure) -- pokud databáze není připravena, tak se aplikace pokusí znova připojit
